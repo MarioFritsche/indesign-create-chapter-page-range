@@ -79,6 +79,7 @@ function createChapterPageRange() {
   mainGroup.alignChildren = "left";
 
   // Panel für Formatwahl (Inhaltsverzeichnis oder Kapitelübersicht)
+
   var formatPanel = mainGroup.add("panel", undefined, "Format auswählen");
   formatPanel.alignChildren = "left";
   formatPanel.preferredSize.width = 350;
@@ -98,7 +99,7 @@ function createChapterPageRange() {
   // Standard Inhaltsverzeichnis
   radioButtonTableOfContents.value = true;
 
-  // Neues Panel "Allgemein" mit den Feldern
+  // Panel "Allgemein"
   var generalPanel = mainGroup.add("panel", undefined, "Allgemein");
   generalPanel.alignChildren = "left";
   generalPanel.preferredSize.width = 350;
@@ -107,7 +108,7 @@ function createChapterPageRange() {
   var titleInput = generalPanel.add(
     "edittext",
     undefined,
-    "Kapitelübersicht mit Seitenbereichen:"
+    "Inhaltsverzeichnis"
   );
   titleInput.characters = 30;
 
@@ -551,8 +552,12 @@ function createChapterPageRange() {
       titleParagraphStyle: titleParagraphStyleDropdown.selection.text, // Absatzformat für den Titel
       entryParagraphStyle: entryParagraphStyleDropdown.selection.text, // Absatzformat für die Einträge
     });
-    $.writeln("Label aktualisiert: " + existingTextFrame.label); // Debug-Ausgabe
-    alert("Inhaltsverzeichnis wurde aktualisiert.");
+
+    alert(
+      (radioButtonChapterOverview.value
+        ? "Kapitelübersicht"
+        : "Inhaltsverzeichnis") + " wurde aktualisiert."
+    );
   }
 
   // Funktion, um alle Absatzformate im Dokument mit vollständigem Pfad zu erhalten
