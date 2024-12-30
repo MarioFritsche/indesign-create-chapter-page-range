@@ -1,8 +1,14 @@
-// Hauptfunktion zum Erstellen der Kapitelübersicht oder des klassischen Inhaltsverzeichnisses
+// createChapterPageRange.jsx
+
+// DESCRIPTION:Erstellen von Inhaltsverzeichnissen und Kapitelübersichten
+// AUTHOR: Mario Fritsche
+// DATE: 30.12.2024
+//Version: 1.0
+
 function createChapterPageRange() {
   var doc = app.activeDocument;
 
-  // JSON-Polyfill für ExtendScript
+  // JSON
   var JSON = {
     stringify: function (obj) {
       var str = "{";
@@ -73,13 +79,12 @@ function createChapterPageRange() {
   );
   dialog.preferredSize.width = 392;
   dialog.alignChildren = ["left", "top"];
-  // Hauptgruppe zur linken Anordnung
+
   var mainGroup = dialog.add("group");
   mainGroup.orientation = "column";
   mainGroup.alignChildren = "left";
 
-  // Panel für Formatwahl (Inhaltsverzeichnis oder Kapitelübersicht)
-
+  // Panel für Formatwahl
   var formatPanel = mainGroup.add("panel", undefined, "Format auswählen");
   formatPanel.alignChildren = "left";
   formatPanel.preferredSize.width = 350;
@@ -96,7 +101,6 @@ function createChapterPageRange() {
     "Kapitelübersicht"
   );
 
-  // Standard Inhaltsverzeichnis
   radioButtonTableOfContents.value = true;
 
   // Panel "Allgemein"
@@ -122,7 +126,7 @@ function createChapterPageRange() {
     undefined,
     getAllParagraphStylesWithPath(doc)
   );
-  paragraphStyleDropdown.selection = 0; // Standardmäßig das erste Element auswählen
+  paragraphStyleDropdown.selection = 0;
 
   generalPanel.add("statictext", undefined, "Text vor der Seitenzahl:");
   var prefixInput = generalPanel.add("edittext", undefined, "Seite");
@@ -133,7 +137,7 @@ function createChapterPageRange() {
   separatorInput.characters = 15;
   separatorInput.enabled = false;
 
-  // Panel für Optionen (Absatzformate Titel und Einträge)
+  // Panel für Optionen (Absatzformate Titel Einträge)
   var optionsPanel = mainGroup.add("panel", undefined, "Optionen");
   optionsPanel.alignChildren = "left";
   optionsPanel.preferredSize.width = 350;
@@ -153,31 +157,30 @@ function createChapterPageRange() {
   );
   entryParagraphStyleDropdown.selection = 0;
 
-  // Checkbox für "Vorhandenes Inhaltsverzeichnis aktualisieren"
+  // Checkbox
   var updateCheckbox = optionsPanel.add(
     "checkbox",
     undefined,
     "Vorhandenes Inhaltsverzeichnis aktualisieren"
   );
 
-  // Text für "Wählen Sie ein Inhaltsverzeichnis:"
   optionsPanel.add(
     "statictext",
     undefined,
     "Wählen Sie ein Inhaltsverzeichnis:"
   );
-  // Dropdown für die Textrahmen-Auswahl (zu Beginn leer)
+
   var existingFramesDropdown = optionsPanel.add("dropdownlist", undefined, []);
-  existingFramesDropdown.selection = 0; // Standardmäßig den ersten Textrahmen auswählen
-  existingFramesDropdown.enabled = false; // Initial deaktiviert
+  existingFramesDropdown.selection = 0;
+  existingFramesDropdown.enabled = false;
   existingFramesDropdown.preferredSize.width = 150;
 
-  // Funktion, um die erste Zeile eines Textrahmens zu extrahieren
+  // Erste Zeile eines Textrahmens
   function getFirstLineOfTextFrame(frame) {
     if (!frame || !frame.contents) {
       return "Unbenannter Textrahmen";
     }
-    var lines = frame.contents.split("\r"); // Nur die erste Zeile extrahieren
+    var lines = frame.contents.split("\r");
     return lines[0] || "Unbenannter Textrahmen";
   }
 
@@ -198,48 +201,44 @@ function createChapterPageRange() {
       existingTextFrames[existingFramesDropdown.selection.index];
     if (selectedFrame) {
       var labelData = JSON.parse(selectedFrame.label);
-      // Den Wert von formatType aus dem Label lesen
       if (labelData.formatType === "chapterOverview") {
         radioButtonChapterOverview.value = true;
-        separatorInput.enabled = true; // Feld für "Text zwischen den Seitenzahlen" aktivieren
+        separatorInput.enabled = true;
       } else if (labelData.formatType === "classicTOC") {
         radioButtonTableOfContents.value = true;
-        separatorInput.enabled = false; // Feld für "Text zwischen den Seitenzahlen" deaktivieren
+        separatorInput.enabled = false;
       }
       // Titel, Prefix und Separator vorbefüllen
       titleInput.text = labelData.title || "";
       prefixInput.text = labelData.prefixText || "";
       separatorInput.text = labelData.separatorText || "";
 
-      // Absatzformat für das Inhaltsverzeichnis aus dem Label holen und im Dropdown setzen
+      // Absatzformat für das Inhaltsverzeichnis aus dem Label holen
       var selectedStyle = labelData.paragraphStyle;
       var index = paragraphStyleDropdown.find(selectedStyle);
 
-      // Überprüfen, ob der Stil im Dropdown vorhanden ist
       if (index !== -1) {
-        // Stil im Dropdown auswählen
         paragraphStyleDropdown.selection = index;
       } else {
-        // Wenn der Stil nicht gefunden wird, Fallback auf den ersten Eintrag im Dropdown
         alert(
           "Das Absatzformat '" +
             selectedStyle +
             "' wurde nicht gefunden. Es wird das erste Format ausgewählt."
         );
-        paragraphStyleDropdown.selection = 0; // Setzt das erste Format als Fallback
+        paragraphStyleDropdown.selection = 0;
       }
 
-      // Vorab gesetzte Absatzformate für Titel und Einträge
+      // Absatzformate für Titel und Einträge
       var titleParagraphStyle = labelData.titleParagraphStyle;
       var entryParagraphStyle = labelData.entryParagraphStyle;
 
-      // Vorbelegung der Dropdowns für Titel und Einträge
+      // Dropdowns für Titel und Einträge
       var titleStyleIndex =
         titleParagraphStyleDropdown.find(titleParagraphStyle);
       if (titleStyleIndex !== -1) {
         titleParagraphStyleDropdown.selection = titleStyleIndex;
       } else {
-        titleParagraphStyleDropdown.selection = 0; // Fallback auf erstes Format
+        titleParagraphStyleDropdown.selection = 0;
       }
 
       var entryStyleIndex =
@@ -247,24 +246,24 @@ function createChapterPageRange() {
       if (entryStyleIndex !== -1) {
         entryParagraphStyleDropdown.selection = entryStyleIndex;
       } else {
-        entryParagraphStyleDropdown.selection = 0; // Fallback auf erstes Format
+        entryParagraphStyleDropdown.selection = 0;
       }
     }
   };
 
-  // Funktion, um den Index eines Absatzformats im Dropdown zu finden
+  // Index Absatzformat
   function findParagraphStyleIndex(dropdown, styleName) {
     for (var i = 0; i < dropdown.items.length; i++) {
       if (dropdown.items[i].text === styleName) {
         return i;
       }
     }
-    return -1; // Rückgabe -1, wenn der Stil nicht gefunden wurde
+    return -1;
   }
 
   // Checkbox-Änderung überwachen, um das Dropdown zu aktivieren
   updateCheckbox.onClick = function () {
-    existingFramesDropdown.enabled = updateCheckbox.value; // Aktiviert das Dropdown nur wenn die Checkbox aktiviert ist
+    existingFramesDropdown.enabled = updateCheckbox.value;
   };
 
   // Wenn kein Textrahmen mit dem Label "ChapterOverviewFrame" existiert, Update-Checkbox deaktivieren
@@ -275,14 +274,14 @@ function createChapterPageRange() {
   // Event-Handler für den Radio-Button für Inhaltsverzeichnis
   radioButtonTableOfContents.onClick = function () {
     if (radioButtonTableOfContents.value) {
-      separatorInput.enabled = false; // Deaktiviert das Textfeld für "Text zwischen den Seitenzahlen"
+      separatorInput.enabled = false;
     }
   };
 
   // Event-Handler für den Radio-Button für Kapitelübersicht
   radioButtonChapterOverview.onClick = function () {
     if (radioButtonChapterOverview.value) {
-      separatorInput.enabled = true; // Aktiviert das Textfeld für "Text zwischen den Seitenzahlen"
+      separatorInput.enabled = true;
     }
   };
 
@@ -359,7 +358,6 @@ function createChapterPageRange() {
     for (var j = 0; j < story.paragraphs.length; j++) {
       var paragraph = story.paragraphs[j];
 
-      // Kapitelüberschrift gefunden
       if (paragraph.appliedParagraphStyle == chapterStyle) {
         var paragraphText = paragraph.contents
           .replace(/[\r\n]+/g, " ")
@@ -392,7 +390,7 @@ function createChapterPageRange() {
     chapters.push(currentChapter);
   }
 
-  // Überarbeiten des Abschnitts, der die Kapitelübersicht oder das Inhaltsverzeichnis erstellt
+  // Kapitelübersicht oder das Inhaltsverzeichnis erstellen
   var outputText = customTitle + "\r";
 
   // Kapitelübersicht erstellen
@@ -426,7 +424,6 @@ function createChapterPageRange() {
   if (!existingTextFrame) {
     if (selectedTextFrame) {
       // Text in den ausgewählten Textrahmen einfügen
-
       selectedTextFrame.contents = outputText;
 
       // Textabsätze formatieren
@@ -462,7 +459,6 @@ function createChapterPageRange() {
         titleParagraphStyle: titleParagraphStyleDropdown.selection.text, // Absatzformat für den Titel
         entryParagraphStyle: entryParagraphStyleDropdown.selection.text, // Absatzformat für die Einträge
       });
-      $.writeln("Label gespeichert: " + selectedTextFrame.label); // Debug-Ausgabe
     } else {
       // Neuen Textrahmen auf der aktiven Seite erstellen
       var activePage = app.activeWindow.activePage;
@@ -480,10 +476,8 @@ function createChapterPageRange() {
         titleParagraphStyle: titleParagraphStyleDropdown.selection.text, // Absatzformat für den Titel
         entryParagraphStyle: entryParagraphStyleDropdown.selection.text, // Absatzformat für die Einträge
       });
-      $.writeln("Label gespeichert: " + newTextFrame.label); // Debug-Ausgabe
 
       // Textinhalt und Geometrie definieren
-
       newTextFrame.contents = outputText;
 
       // Textabsätze formatieren
@@ -513,10 +507,13 @@ function createChapterPageRange() {
       var right = "150mm";
       newTextFrame.geometricBounds = [top, left, bottom, right];
     }
-    alert("Inhaltsverzeichnis wurde erstellt.");
+    alert(
+      (radioButtonChapterOverview.value
+        ? "Kapitelübersicht"
+        : "Inhaltsverzeichnis") + " wurde erstellt."
+    );
   } else {
     // Text im bestehenden Textrahmen aktualisieren
-
     existingTextFrame.contents = outputText;
 
     // Textabsätze formatieren
@@ -560,7 +557,7 @@ function createChapterPageRange() {
     );
   }
 
-  // Funktion, um alle Absatzformate im Dokument mit vollständigem Pfad zu erhalten
+  // Alle Absatzformate im Dokument mit vollständigem Pfad
   function getAllParagraphStylesWithPath(doc) {
     var styles = [];
 
@@ -581,7 +578,7 @@ function createChapterPageRange() {
     return styles;
   }
 
-  // Beispiel, um sicherzustellen, dass der Absatzstil existiert und eine Fehlermeldung angezeigt wird
+  // Absatzformat muss vorhanden sein
   function findParagraphStyleByPath(doc, stylePath) {
     var pathParts = stylePath.split(" > ");
     var style = doc.paragraphStyles;
@@ -593,7 +590,7 @@ function createChapterPageRange() {
         alert(
           "Absatzformat '" + pathParts[i] + "' konnte nicht gefunden werden."
         );
-        return null; // Rückgabe von null, wenn der Stil nicht existiert
+        return null;
       }
 
       if (i < pathParts.length - 1) {
