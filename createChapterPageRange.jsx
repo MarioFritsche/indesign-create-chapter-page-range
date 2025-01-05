@@ -2,7 +2,7 @@
 
 // DESCRIPTION:Erstellen von Inhaltsverzeichnissen und Kapitelübersichten
 // AUTHOR: Mario Fritsche
-// DATE: 30.12.2024
+// DATE: 5.1.2025
 // Version: 1.0
 
 function createChapterPageRange() {
