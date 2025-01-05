@@ -3,7 +3,7 @@
 // DESCRIPTION:Erstellen von Inhaltsverzeichnissen und Kapitelübersichten
 // AUTHOR: Mario Fritsche
 // DATE: 30.12.2024
-//Version: 1.0
+// Version: 1.0
 
 function createChapterPageRange() {
   var doc = app.activeDocument;
@@ -51,7 +51,7 @@ function createChapterPageRange() {
   var isTextFrameEmpty =
     selectedTextFrame && selectedTextFrame.contents.length === 0;
 
-  // Textrahmen mit dem Label "ChapterOverviewFrame" suchen
+  // Textrahmen mit dem Label ChapterOverviewFrame suchen
   var existingTextFrames = []; // Initialisieren
   for (var i = 0; i < doc.textFrames.length; i++) {
     try {
@@ -64,7 +64,7 @@ function createChapterPageRange() {
     }
   }
 
-  // Wenn weder ein leerer Textrahmen ausgewählt ist noch Textrahmen mit dem Label "ChapterOverviewFrame" existieren
+  // Wenn weder ein leerer Textrahmen ausgewählt ist noch Textrahmen mit dem Label ChapterOverviewFrame existieren
   if (existingTextFrames.length === 0 && !isTextFrameEmpty) {
     alert(
       "Bitte erstellen Sie einen leeren Textrahmen oder verwenden Sie einen Textrahmen mit dem Label 'ChapterOverviewFrame'."
@@ -103,7 +103,7 @@ function createChapterPageRange() {
 
   radioButtonTableOfContents.value = true;
 
-  // Panel "Allgemein"
+  // Panel Allgemein
   var generalPanel = mainGroup.add("panel", undefined, "Allgemein");
   generalPanel.alignChildren = "left";
   generalPanel.preferredSize.width = 350;
@@ -266,7 +266,7 @@ function createChapterPageRange() {
     existingFramesDropdown.enabled = updateCheckbox.value;
   };
 
-  // Wenn kein Textrahmen mit dem Label "ChapterOverviewFrame" existiert, Update-Checkbox deaktivieren
+  // Wenn kein Textrahmen mit dem Label ChapterOverviewFrame existiert, Update-Checkbox deaktivieren
   if (existingTextFrames.length === 0) {
     updateCheckbox.enabled = false;
   }
@@ -344,7 +344,7 @@ function createChapterPageRange() {
   var existingTextFrame = null;
 
   if (updateExisting && selectedFrame) {
-    existingTextFrame = selectedFrame; // Den ausgewählten Textrahmen verwenden
+    existingTextFrame = selectedFrame;
   }
 
   // Variablen für Kapitel und Seitenbereiche
@@ -465,7 +465,7 @@ function createChapterPageRange() {
       var newTextFrame = activePage.textFrames.add();
 
       newTextFrame.label = JSON.stringify({
-        type: "ChapterOverviewFrame", // Identifikator für den Textrahmen
+        type: "ChapterOverviewFrame",
         paragraphStyle: selectedStylePath,
         title: customTitle,
         prefixText: prefixText,
@@ -473,8 +473,8 @@ function createChapterPageRange() {
         formatType: radioButtonChapterOverview.value
           ? "chapterOverview"
           : "classicTOC",
-        titleParagraphStyle: titleParagraphStyleDropdown.selection.text, // Absatzformat für den Titel
-        entryParagraphStyle: entryParagraphStyleDropdown.selection.text, // Absatzformat für die Einträge
+        titleParagraphStyle: titleParagraphStyleDropdown.selection.text,
+        entryParagraphStyle: entryParagraphStyleDropdown.selection.text,
       });
 
       // Textinhalt und Geometrie definieren
@@ -538,7 +538,7 @@ function createChapterPageRange() {
 
     // Label aktualisieren
     existingTextFrame.label = JSON.stringify({
-      type: "ChapterOverviewFrame", // Identifikator für den Textrahmen
+      type: "ChapterOverviewFrame",
       paragraphStyle: selectedStylePath,
       title: customTitle,
       prefixText: prefixText,
@@ -546,8 +546,8 @@ function createChapterPageRange() {
       formatType: radioButtonChapterOverview.value
         ? "chapterOverview"
         : "classicTOC",
-      titleParagraphStyle: titleParagraphStyleDropdown.selection.text, // Absatzformat für den Titel
-      entryParagraphStyle: entryParagraphStyleDropdown.selection.text, // Absatzformat für die Einträge
+      titleParagraphStyle: titleParagraphStyleDropdown.selection.text,
+      entryParagraphStyle: entryParagraphStyleDropdown.selection.text,
     });
 
     alert(
