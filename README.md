@@ -59,7 +59,7 @@ Ein InDesign-Skript, das eine einfache Möglichkeit bietet, Inhaltsverzeichnisse
 
 ## Support
 
-Für Feedback erstelle bitte ein [Issue](https://github.com/MarioFritsche/createChapterPageRange/issues) auf GitHub.
+Für Feedback erstelle bitte ein [Issue](https://github.com/MarioFritsche/indesign-create-chapter-page-range/issues) auf GitHub.
 
 ## Lizenz
 
