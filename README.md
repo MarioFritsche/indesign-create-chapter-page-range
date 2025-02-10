@@ -1,4 +1,4 @@
-# InDesign Create Chapter Page Range
+# InDesign Create Chapter Page Range - WIP
 
 Ein InDesign-Skript, das eine einfache Möglichkeit bietet, Inhaltsverzeichnisse (IHV) oder Kapitelübersichten (KÜ) zu erstellen und zu verwalten. Das Skript ist für die Erstellung einer Ebene ausgelegt und bietet flexible Optionen zur Formatierung und Aktualisierung bestehender Verzeichnisse.
 
